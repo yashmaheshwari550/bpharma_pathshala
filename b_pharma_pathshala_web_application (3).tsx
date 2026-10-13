@@ -1,0 +1,1704 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  BookOpen, 
+  GraduationCap, 
+  FileText, 
+  CheckCircle, 
+  Clock, 
+  Lock, 
+  Unlock, 
+  Upload, 
+  Download, 
+  Eye, 
+  ShieldCheck, 
+  QrCode, 
+  MessageSquare, 
+  User, 
+  Settings, 
+  Search, 
+  Plus, 
+  Trash2, 
+  Edit, 
+  Check, 
+  X, 
+  AlertCircle, 
+  Menu, 
+  Phone, 
+  Smartphone,
+  ChevronRight,
+  ExternalLink,
+  DollarSign,
+  ImageIcon,
+  Copy,
+  LogOut,
+  Database,
+  Sparkles,
+  HelpCircle,
+  FileCheck,
+  Filter,
+  FolderOpen,
+  ArrowRight,
+  Info
+} from 'lucide-react';
+
+const DEFAULT_ASSETS = {
+  logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'><circle cx='250' cy='250' r='235' fill='%23ffffff' stroke='%230B2545' stroke-width='14'/><circle cx='250' cy='250' r='220' fill='none' stroke='%23FF6B00' stroke-width='4'/><path d='M 120,220 Q 250,150 380,220' fill='none' stroke='%230B2545' stroke-width='8'/><path d='M 130,230 Q 250,165 370,230' fill='none' stroke='%23FF6B00' stroke-width='5'/><path d='M 250,90 L 330,135 L 250,180 L 170,135 Z' fill='%230B2545'/><rect x='245' y='180' width='10' height='30' fill='%230B2545'/><path d='M 330,135 Q 345,170 330,200' fill='none' stroke='%23FF6B00' stroke-width='4'/><circle cx='330' cy='205' r='6' fill='%23FF6B00'/><path d='M 230,170 C 220,150 240,140 250,155 C 260,140 280,150 270,170 Z' fill='%234CAF50'/><path d='M 220,205 C 220,180 280,180 280,205 L 265,225 L 235,225 Z' fill='none' stroke='%230B2545' stroke-width='6'/><path d='M 250,190 Q 255,200 250,210 Q 245,220 250,225' fill='none' stroke='%230B2545' stroke-width='4'/><text x='250' y='275' font-family='Arial Black, sans-serif' font-weight='900' font-size='50' fill='%230B2545' text-anchor='middle'>B Pharma</text><text x='250' y='330' font-family='Arial Black, sans-serif' font-weight='900' font-size='48' fill='%23FF6B00' text-anchor='middle'>Pathshala</text><path d='M 180,360 L 320,360' stroke='%230B2545' stroke-width='3'/><path d='M 235,350 L 250,360 L 235,370 Z' fill='%230B2545'/><path d='M 265,350 L 250,360 L 265,370 Z' fill='%230B2545'/></svg>",
+  qrCode: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 380' fill='none'><rect width='300' height='380' rx='16' fill='%23FFFFFF'/><rect x='15' y='15' width='270' height='350' rx='12' fill='%23F8FAFC' stroke='%23E2E8F0' stroke-width='2'/><rect x='30' y='30' width='240' height='50' rx='8' fill='%23002970'/><text x='150' y='60' font-family='sans-serif' font-weight='bold' font-size='20' fill='%23FFFFFF' text-anchor='middle'>BharatPe</text><rect x='40' y='95' width='220' height='220' fill='%23FFFFFF' rx='8' stroke='%23CBD5E1'/><path d='M50 105h50v50H50zM120 105h20v20h-20zM150 105h10v10h-10zM170 105h10v20h-10zM200 105h40v40h-40zM60 115h30v30H60zM210 115h20v20h-20zM120 135h30v20h-30zM160 135h20v10h-20zM50 170h10v30H50zM70 170h30v10H70zM110 165h20v20h-20zM140 165h30v10h-30zM180 165h20v30h-20zM210 165h30v20h-30zM80 190h20v30H80zM120 195h10v20h-10zM140 185h30v20h-30zM180 205h10v20h-10zM200 195h30v10h-30zM50 215h40v40H50zM60 225h20v20H60zM100 225h20v10h-20zM130 220h10v30h-10zM150 225h30v10h-30zM190 225h10v30h-10zM210 220h30v20h-30zM110 245h30v20h-30zM150 245h20v20h-20zM180 250h20v20h-20zM210 250h30v20h-30z' fill='%23000000'/><text x='150' y='335' font-family='sans-serif' font-weight='bold' font-size='14' fill='%230B2545' text-anchor='middle'>Merchant: Yash Maheshwari</text><text x='150' y='352' font-family='sans-serif' font-size='12' fill='%2364748B' text-anchor='middle'>UPI ID: bharatpe908272911@yesbank</text></svg>",
+  upiId: "bharatpe908272911@yesbank",
+  founderName: "Yash Maheshwari",
+  supportPhone: "8006020616",
+  whatsappUrl: "https://wa.me/918006020616"
+};
+
+const INITIAL_PLANS = [
+  { id: 'p1', title: 'Old AKTU B.Pharm Notes', category: 'B.Pharm', price: 199, validity: '8 Months', type: 'Old AKTU', active: true, description: 'Complete unit-wise syllabus coverage & notes for AKTU 2019-20 pattern.' },
+  { id: 'p2', title: 'New B.Pharm Notes (2026-27)', category: 'B.Pharm', price: 249, validity: '8 Months', type: 'New B.Pharm', active: true, description: 'Updated PCI curriculum notes with diagrammatic explanations.' },
+  { id: 'p3', title: 'D.Pharm Full Batch', category: 'D.Pharm', price: 899, validity: '1 Year', type: 'D.Pharm', active: true, description: 'Complete Part I & Part II study pack, ER-2020 syllabus aligned.' },
+  { id: 'p4', title: 'B.Pharm Important Questions', category: 'B.Pharm', price: 49, validity: '8 Months', type: 'B.Pharm Imp Qs', active: true, description: 'High-yield exam prediction questions with model solution guides.' },
+  { id: 'p5', title: 'D.Pharm Important Questions', category: 'D.Pharm', price: 149, validity: '1 Year', type: 'D.Pharm Imp Qs', active: true, description: 'Board exam essential questions and repeated previous year topics.' }
+];
+
+const INITIAL_NOTES = [
+  {
+    id: 'n1',
+    title: 'Human Anatomy & Physiology I - Unit 1',
+    description: 'Cell structure, tissue organization, and skeletal system fundamentals.',
+    course: 'B.Pharm',
+    syllabusType: 'New B.Pharm',
+    semester: 'Semester 1',
+    subject: 'Human Anatomy and Physiology I',
+    unit: 'Unit 1',
+    materialType: 'Notes',
+    isPublished: true,
+    isFree: true,
+    pdfUrl: 'https://www.w3.org/W3C/History/19921103-hypertext/hypertext/WWW/TheProject.html',
+    fileName: 'HAP_I_Unit1_Notes.pdf',
+    fileSize: '2.4 MB',
+    uploadedAt: '2026-10-10'
+  },
+  {
+    id: 'n2',
+    title: 'Pharmaceutical Analysis I - Unit 1 & 2',
+    description: 'Errors, acid-base titrations, and non-aqueous titrations.',
+    course: 'B.Pharm',
+    syllabusType: 'New B.Pharm',
+    semester: 'Semester 1',
+    subject: 'Pharmaceutical Analysis I',
+    unit: 'Unit 1',
+    materialType: 'Notes',
+    isPublished: true,
+    isFree: false,
+    pdfUrl: '',
+    fileName: 'Pharm_Analysis_Unit1.pdf',
+    fileSize: '3.8 MB',
+    uploadedAt: '2026-10-11'
+  },
+  {
+    id: 'n3',
+    title: 'AKTU 2019-20 Pharmaceutics I Syllabus & Notes',
+    description: 'Posology, dosage forms, and liquid oral preparations.',
+    course: 'B.Pharm',
+    syllabusType: 'Old AKTU',
+    semester: 'Semester 1',
+    subject: 'Pharmaceutics I',
+    unit: 'Unit 1',
+    materialType: 'Notes',
+    isPublished: true,
+    isFree: false,
+    pdfUrl: '',
+    fileName: 'AKTU_Pharmaceutics_I.pdf',
+    fileSize: '4.5 MB',
+    uploadedAt: '2026-10-08'
+  },
+  {
+    id: 'n4',
+    title: 'D.Pharm Part I - Pharmaceutics Chapter 1',
+    description: 'History of Pharmacy profession and Pharmacopoeias (IP, BP, USP).',
+    course: 'D.Pharm',
+    syllabusType: 'D.Pharm',
+    semester: 'Part I',
+    subject: 'Pharmaceutics',
+    unit: 'Unit 1',
+    materialType: 'Notes',
+    isPublished: true,
+    isFree: true,
+    pdfUrl: 'https://www.w3.org/W3C/History/19921103-hypertext/hypertext/WWW/TheProject.html',
+    fileName: 'DPharm_Part1_Pharmaceutics.pdf',
+    fileSize: '3.1 MB',
+    uploadedAt: '2026-10-12'
+  },
+  {
+    id: 'n5',
+    title: 'B.Pharm Sem 1 Most Expected Exam Questions 2026',
+    description: '10-marker & 5-marker predicted university question bank with solutions.',
+    course: 'B.Pharm',
+    syllabusType: 'B.Pharm Imp Qs',
+    semester: 'Semester 1',
+    subject: 'All Subjects',
+    unit: 'Full Subject',
+    materialType: 'Important Questions',
+    isPublished: true,
+    isFree: false,
+    pdfUrl: '',
+    fileName: 'BPharm_Sem1_Important_Questions.pdf',
+    fileSize: '1.8 MB',
+    uploadedAt: '2026-10-12'
+  }
+];
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('home');
+  const [selectedCourseSection, setSelectedCourseSection] = useState('new_bpharm'); 
+  const [selectedSemester, setSelectedSemester] = useState('Semester 1');
+  const [selectedDpharmPart, setSelectedDpharmPart] = useState('Part I');
+
+  // Asset & Configuration State
+  const [assets, setAssets] = useState(() => {
+    const saved = localStorage.getItem('bpharma_assets');
+    return saved ? JSON.parse(saved) : DEFAULT_ASSETS;
+  });
+
+  const [plans, setPlans] = useState(() => {
+    const saved = localStorage.getItem('bpharma_plans');
+    return saved ? JSON.parse(saved) : INITIAL_PLANS;
+  });
+
+  const [notes, setNotes] = useState(() => {
+    const saved = localStorage.getItem('bpharma_notes');
+    return saved ? JSON.parse(saved) : INITIAL_NOTES;
+  });
+
+  const [payments, setPayments] = useState(() => {
+    const saved = localStorage.getItem('bpharma_payments');
+    return saved ? JSON.parse(saved) : [
+      { id: 'tx_101', studentName: 'Rahul Verma', mobile: '9876543210', planId: 'p2', planTitle: 'New B.Pharm Notes (2026-27)', amount: 249, utr: '320918239012', date: '2026-10-12', status: 'Approved' }
+    ];
+  });
+
+  // User Authentication
+  const [currentUser, setCurrentUser] = useState(() => {
+    const saved = localStorage.getItem('bpharma_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const [isAdmin, setIsAdmin] = useState(() => {
+    const saved = localStorage.getItem('bpharma_is_admin');
+    return saved === 'true';
+  });
+
+  // Modal controls
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState('login'); // 'login' | 'signup' | 'admin'
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPlanForPurchase, setSelectedPlanForPurchase] = useState(null);
+  const [showPdfViewerModal, setShowPdfViewerModal] = useState(null);
+  const [showStorageNoticeModal, setShowStorageNoticeModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Search & Filters for student materials
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterMaterialType, setFilterMaterialType] = useState('All');
+
+  // Auth form
+  const [authForm, setAuthForm] = useState({ name: '', phone: '', otp: '', adminCode: '' });
+  const [otpSent, setOtpSent] = useState(false);
+  const [simulatedOtp, setSimulatedOtp] = useState('');
+
+  // Payment Form
+  const [paymentForm, setPaymentForm] = useState({ utr: '', screenshotName: '' });
+
+  // Admin Note Upload / Edit Form State
+  const [editingNoteId, setEditingNoteId] = useState(null);
+  const [noteForm, setNoteForm] = useState({
+    title: '',
+    description: '',
+    course: 'B.Pharm',
+    syllabusType: 'New B.Pharm',
+    semester: 'Semester 1',
+    subject: '',
+    unit: 'Unit 1',
+    materialType: 'Notes',
+    isPublished: true,
+    isFree: false,
+    pdfUrl: '',
+    fileName: '',
+    fileSize: ''
+  });
+
+  // Local storage synchronization
+  useEffect(() => { localStorage.setItem('bpharma_assets', JSON.stringify(assets)); }, [assets]);
+  useEffect(() => { localStorage.setItem('bpharma_plans', JSON.stringify(plans)); }, [plans]);
+  useEffect(() => { localStorage.setItem('bpharma_notes', JSON.stringify(notes)); }, [notes]);
+  useEffect(() => { localStorage.setItem('bpharma_payments', JSON.stringify(payments)); }, [payments]);
+  useEffect(() => { localStorage.setItem('bpharma_user', JSON.stringify(currentUser)); }, [currentUser]);
+  useEffect(() => { localStorage.setItem('bpharma_is_admin', isAdmin); }, [isAdmin]);
+
+  const handleSendOtp = () => {
+    if (!authForm.phone || authForm.phone.length < 10) {
+      alert("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+    const generated = Math.floor(1000 + Math.random() * 9000).toString();
+    setSimulatedOtp(generated);
+    setOtpSent(true);
+  };
+
+  const handleAuthSubmit = (e) => {
+    e.preventDefault();
+    if (authMode === 'admin') {
+      if (authForm.adminCode === 'YASH2026' || authForm.adminCode === 'admin') {
+        setIsAdmin(true);
+        setCurrentUser({ name: 'Yash Maheshwari (Admin)', phone: '8006020616', role: 'admin' });
+        setShowAuthModal(false);
+        setActiveTab('admin');
+        alert("Admin Privileges Granted! Welcome Yash Sir.");
+      } else {
+        alert("Invalid Admin Passcode! Hint: Use 'YASH2026'");
+      }
+      return;
+    }
+
+    if (authForm.otp !== simulatedOtp && authForm.otp !== '1234') {
+      alert("Invalid OTP! Check the 4-digit OTP shown on screen.");
+      return;
+    }
+
+    const newStudent = {
+      id: 'std_' + Date.now(),
+      name: authForm.name || 'Student (' + authForm.phone.slice(-4) + ')',
+      phone: authForm.phone,
+      role: 'student'
+    };
+    setCurrentUser(newStudent);
+    setIsAdmin(false);
+    setShowAuthModal(false);
+    alert(`Welcome ${newStudent.name}! You are now logged in.`);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setIsAdmin(false);
+    setActiveTab('home');
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        alert("Please upload a valid PDF document.");
+        return;
+      }
+      const objectUrl = URL.createObjectURL(file);
+      const calculatedSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+
+      setNoteForm(prev => ({
+        ...prev,
+        pdfUrl: objectUrl,
+        fileName: file.name,
+        fileSize: calculatedSize
+      }));
+    }
+  };
+
+  const handleSaveNote = (e) => {
+    e.preventDefault();
+    if (!noteForm.title || !noteForm.subject) {
+      alert("Please provide at least a Note Title and Subject Name.");
+      return;
+    }
+
+    if (editingNoteId) {
+      setNotes(notes.map(n => n.id === editingNoteId ? { ...noteForm, id: editingNoteId } : n));
+      alert("Study Material updated successfully!");
+    } else {
+      const newEntry = {
+        ...noteForm,
+        id: 'note_' + Date.now(),
+        uploadedAt: new Date().toISOString().split('T')[0]
+      };
+      setNotes([newEntry, ...notes]);
+      alert("New Study Material published to student portal!");
+    }
+
+    // Reset form
+    setEditingNoteId(null);
+    setNoteForm({
+      title: '', description: '', course: 'B.Pharm', syllabusType: 'New B.Pharm',
+      semester: 'Semester 1', subject: '', unit: 'Unit 1', materialType: 'Notes',
+      isPublished: true, isFree: false, pdfUrl: '', fileName: '', fileSize: ''
+    });
+  };
+
+  const handleEditNote = (note) => {
+    setEditingNoteId(note.id);
+    setNoteForm(note);
+    window.scrollTo({ top: 100, behavior: 'smooth' });
+  };
+
+  const handleDeleteNote = (id) => {
+    if (window.confirm("Are you sure you want to delete this material?")) {
+      setNotes(notes.filter(n => n.id !== id));
+    }
+  };
+
+  const handleEnrollClick = (plan) => {
+    if (!currentUser) {
+      setSelectedPlanForPurchase(plan);
+      setShowAuthModal(true);
+      return;
+    }
+    setSelectedPlanForPurchase(plan);
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentSubmit = (e) => {
+    e.preventDefault();
+    if (!paymentForm.utr || paymentForm.utr.length < 6) {
+      alert("Please enter a valid 12-digit UTR or Transaction ID.");
+      return;
+    }
+
+    const newTx = {
+      id: 'tx_' + Date.now(),
+      studentName: currentUser.name,
+      mobile: currentUser.phone,
+      planId: selectedPlanForPurchase.id,
+      planTitle: selectedPlanForPurchase.title,
+      amount: selectedPlanForPurchase.price,
+      utr: paymentForm.utr,
+      date: new Date().toISOString().split('T')[0],
+      status: 'Pending'
+    };
+
+    setPayments([newTx, ...payments]);
+    setShowPaymentModal(false);
+    setPaymentForm({ utr: '', screenshotName: '' });
+
+    const msg = `Hello Yash Sir! I completed my payment on B Pharma Pathshala.%0A%0A*Name:* ${currentUser.name}%0A*Mobile:* ${currentUser.phone}%0A*Plan:* ${selectedPlanForPurchase.title}%0A*Amount:* ₹${selectedPlanForPurchase.price}%0A*UTR/Txn ID:* ${newTx.utr}%0A%0APlease verify & grant access. Thank you!`;
+    const waUrl = `${assets.whatsappUrl}?text=${msg}`;
+
+    if (window.confirm("Payment Request Submitted!\nStatus: PENDING ADMIN APPROVAL.\n\nOpen WhatsApp to send instant verification details to Yash Sir?")) {
+      window.open(waUrl, '_blank');
+    }
+    setActiveTab('dashboard');
+  };
+
+  const userHasAccessToMaterial = (material) => {
+    if (isAdmin) return true;
+    if (material.isFree) return true;
+    if (!currentUser) return false;
+
+    return payments.some(p => 
+      p.mobile === currentUser.phone && 
+      p.status === 'Approved' && 
+      (p.planTitle.includes(material.syllabusType) || material.syllabusType === 'Free')
+    );
+  };
+
+  const getFilteredNotesForStudent = () => {
+    return notes.filter(n => {
+      if (!n.isPublished && !isAdmin) return false;
+
+      // Course section matching
+      if (selectedCourseSection === 'old_aktu' && n.syllabusType !== 'Old AKTU') return false;
+      if (selectedCourseSection === 'new_bpharm' && n.syllabusType !== 'New B.Pharm') return false;
+      if (selectedCourseSection === 'dpharm_part1' && (n.syllabusType !== 'D.Pharm' || n.semester !== 'Part I')) return false;
+      if (selectedCourseSection === 'dpharm_part2' && (n.syllabusType !== 'D.Pharm' || n.semester !== 'Part II')) return false;
+      if (selectedCourseSection === 'bpharm_imp' && n.syllabusType !== 'B.Pharm Imp Qs') return false;
+      if (selectedCourseSection === 'dpharm_imp' && n.syllabusType !== 'D.Pharm Imp Qs') return false;
+
+      // Semester Filter for B.Pharm
+      if (['old_aktu', 'new_bpharm'].includes(selectedCourseSection)) {
+        if (n.semester !== selectedSemester) return false;
+      }
+
+      // Material Type Filter
+      if (filterMaterialType !== 'All' && n.materialType !== filterMaterialType) return false;
+
+      // Text Query Search
+      if (searchQuery.trim() !== '') {
+        const q = searchQuery.toLowerCase();
+        const titleMatch = n.title.toLowerCase().includes(q);
+        const subjectMatch = n.subject.toLowerCase().includes(q);
+        const descMatch = (n.description || '').toLowerCase().includes(q);
+        if (!titleMatch && !subjectMatch && !descMatch) return false;
+      }
+
+      return true;
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex flex-col">
+      {}
+      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+          
+          {/* Logo & Brand Title */}
+          <div 
+            className="flex items-center space-x-3 cursor-pointer" 
+            onClick={() => setActiveTab('home')}
+          >
+            <img 
+              src={assets.logo} 
+              alt="B Pharma Pathshala Logo" 
+              className="h-12 w-12 object-contain rounded-full shadow-sm border border-slate-100" 
+            />
+            <div>
+              <span className="text-xl sm:text-2xl font-extrabold text-[#0B2545] tracking-tight block leading-none">
+                B Pharma <span className="text-[#FF6B00]">Pathshala</span>
+              </span>
+              <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider block mt-1">
+                By Yash Maheshwari
+              </span>
+            </div>
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-1">
+            {[
+              { id: 'home', label: 'Home' },
+              { id: 'courses', label: 'Semester & Notes Library' },
+              { id: 'pricing', label: 'Pricing Plans' },
+              { id: 'dashboard', label: 'My Dashboard' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                  activeTab === tab.id 
+                    ? 'bg-[#0B2545] text-white shadow-sm' 
+                    : 'text-slate-600 hover:text-[#0B2545] hover:bg-slate-100'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+
+            {/* Prominent Admin Panel Header Button */}
+            <button
+              onClick={() => {
+                if (!isAdmin) {
+                  setAuthMode('admin');
+                  setShowAuthModal(true);
+                } else {
+                  setActiveTab('admin');
+                }
+              }}
+              className={`ml-2 px-4 py-2 rounded-lg font-bold text-sm flex items-center space-x-1.5 transition ${
+                activeTab === 'admin' 
+                  ? 'bg-[#FF6B00] text-white shadow-md' 
+                  : 'bg-orange-50 text-[#FF6B00] border border-orange-200 hover:bg-orange-100'
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>Admin Panel</span>
+            </button>
+          </nav>
+
+          {/* Header Action Tools & User Profile */}
+          <div className="hidden lg:flex items-center space-x-3">
+            <button
+              onClick={() => setShowStorageNoticeModal(true)}
+              className="p-2 text-slate-500 hover:text-[#0B2545] hover:bg-slate-100 rounded-lg flex items-center space-x-1 text-xs font-medium"
+              title="Storage & Backend Info"
+            >
+              <Database className="w-4 h-4 text-slate-600" />
+              <span>Storage Info</span>
+            </button>
+
+            {currentUser ? (
+              <div className="flex items-center space-x-3 pl-2 border-l border-slate-200">
+                <div className="text-right">
+                  <div className="text-sm font-bold text-[#0B2545] leading-none">{currentUser.name}</div>
+                  <div className="text-[10px] text-slate-500 capitalize">{currentUser.role}</div>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                  title="Logout"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => { setAuthMode('login'); setShowAuthModal(true); }}
+                className="bg-[#FF6B00] hover:bg-[#e05e00] text-white px-5 py-2.5 rounded-lg font-bold text-sm shadow-md flex items-center space-x-1.5"
+              >
+                <User className="w-4 h-4" />
+                <span>Student Login</span>
+              </button>
+            )}
+          </div>
+
+          {/* Mobile Hamburger Toggle */}
+          <div className="lg:hidden flex items-center space-x-2">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-2">
+            {[
+              { id: 'home', label: 'Home' },
+              { id: 'courses', label: 'Semester & Notes Library' },
+              { id: 'pricing', label: 'Pricing Plans' },
+              { id: 'dashboard', label: 'My Dashboard' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => { setActiveTab(tab.id); setMobileMenuOpen(false); }}
+                className={`w-full text-left px-4 py-3 rounded-lg font-medium text-sm ${
+                  activeTab === tab.id ? 'bg-[#0B2545] text-white' : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                if (!isAdmin) {
+                  setAuthMode('admin');
+                  setShowAuthModal(true);
+                } else {
+                  setActiveTab('admin');
+                }
+              }}
+              className="w-full text-left px-4 py-3 rounded-lg font-bold text-sm bg-orange-50 text-[#FF6B00] border border-orange-200 flex items-center space-x-2"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>Admin Panel (Yash Sir)</span>
+            </button>
+
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+              {currentUser ? (
+                <div className="flex items-center justify-between w-full">
+                  <div>
+                    <div className="font-bold text-sm text-[#0B2545]">{currentUser.name}</div>
+                    <div className="text-xs text-slate-500">{currentUser.phone}</div>
+                  </div>
+                  <button onClick={handleLogout} className="px-3 py-1.5 text-xs font-bold text-red-600 bg-red-50 rounded-md">Logout</button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => { setAuthMode('login'); setShowAuthModal(true); setMobileMenuOpen(false); }}
+                  className="w-full bg-[#FF6B00] text-white py-2.5 rounded-lg font-bold text-center text-sm shadow"
+                >
+                  Student / Admin Login
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      </header>
+
+      {}
+      <main className="flex-1">
+        
+        {/* HOMEPAGE VIEW */}
+        {activeTab === 'home' && (
+          <div>
+            {/* HERO BANNER SECTION */}
+            <section className="bg-gradient-to-br from-[#0B2545] via-[#134074] to-[#0B2545] text-white py-16 lg:py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(#FF6B00_1px,transparent_1px)] [background-size:24px_24px] opacity-10"></div>
+              
+              <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
+                <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 text-orange-300 text-xs sm:text-sm font-semibold">
+                  <Sparkles className="w-4 h-4 text-[#FF6B00]" />
+                  <span>Excellence in Pharmacy Education • Yash Maheshwari</span>
+                </div>
+
+                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                  Welcome to <span className="text-[#FF6B00]">B Pharma Pathshala</span>
+                </h1>
+
+                <p className="text-base sm:text-lg lg:text-xl text-slate-200 max-w-3xl mx-auto font-normal leading-relaxed">
+                  Empowering B.Pharm & D.Pharm students with premium notes, syllabus guides, important questions, and expert lectures by Yash Maheshwari.
+                </p>
+
+                {/* Hero Action Trigger Buttons */}
+                <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
+                  <button
+                    onClick={() => {
+                      setSelectedCourseSection('new_bpharm');
+                      setActiveTab('courses');
+                    }}
+                    className="bg-[#FF6B00] hover:bg-[#e05e00] text-white px-8 py-4 rounded-xl font-bold text-base shadow-lg hover:scale-105 transition flex items-center space-x-2"
+                  >
+                    <BookOpen className="w-5 h-5" />
+                    <span>Explore Notes Library</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setSelectedCourseSection('new_bpharm');
+                      setActiveTab('courses');
+                    }}
+                    className="bg-transparent border-2 border-slate-300 hover:border-white text-white hover:bg-white/10 px-8 py-4 rounded-xl font-bold text-base transition flex items-center space-x-2"
+                  >
+                    <GraduationCap className="w-5 h-5 text-orange-400" />
+                    <span>New B.Pharm 2026-27</span>
+                  </button>
+
+                  {/* Hero Admin Panel Shortcut Button */}
+                  <button
+                    onClick={() => {
+                      if (!isAdmin) {
+                        setAuthMode('admin');
+                        setShowAuthModal(true);
+                      } else {
+                        setActiveTab('admin');
+                      }
+                    }}
+                    className="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 py-4 rounded-xl font-bold text-base transition flex items-center space-x-2"
+                  >
+                    <ShieldCheck className="w-5 h-5 text-orange-300" />
+                    <span>Admin Panel</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            {/* COURSE & SYLLABUS DIRECT ACCESS CARDS */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 mb-16">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  {
+                    title: 'New B.Pharm (2026-27)',
+                    desc: 'Semesters 1–8 PCI syllabus notes with diagrammatic guides.',
+                    icon: BookOpen,
+                    badge: 'Sem 1 - 8',
+                    action: () => { setSelectedCourseSection('new_bpharm'); setActiveTab('courses'); }
+                  },
+                  {
+                    title: 'Old AKTU B.Pharm (2019-20)',
+                    desc: 'Legacy AKTU pattern unit-wise handwritten notes & syllabus.',
+                    icon: FileText,
+                    badge: 'Legacy Sem 1 - 8',
+                    action: () => { setSelectedCourseSection('old_aktu'); setActiveTab('courses'); }
+                  },
+                  {
+                    title: 'D.Pharm Study Pack',
+                    desc: 'Complete ER-2020 materials for D.Pharm Part I & Part II.',
+                    icon: GraduationCap,
+                    badge: 'Part I & Part II',
+                    action: () => { setSelectedCourseSection('dpharm_part1'); setActiveTab('courses'); }
+                  },
+                  {
+                    title: 'B.Pharm Important Questions',
+                    desc: 'High-yield exam prediction questions for university exams.',
+                    icon: CheckCircle,
+                    badge: 'High Scoring',
+                    action: () => { setSelectedCourseSection('bpharm_imp'); setActiveTab('courses'); }
+                  },
+                  {
+                    title: 'D.Pharm Important Questions',
+                    desc: 'Essential board exam repeated questions and model answers.',
+                    icon: FileCheck,
+                    badge: 'Board Prep',
+                    action: () => { setSelectedCourseSection('dpharm_imp'); setActiveTab('courses'); }
+                  },
+                  {
+                    title: 'Admin Control Center',
+                    desc: 'Upload PDFs, manage pricing plans, and verify payments.',
+                    icon: ShieldCheck,
+                    badge: 'Yash Sir Only',
+                    action: () => {
+                      if (!isAdmin) {
+                        setAuthMode('admin');
+                        setShowAuthModal(true);
+                      } else {
+                        setActiveTab('admin');
+                      }
+                    }
+                  }
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    onClick={item.action}
+                    className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl border border-slate-100 transition duration-300 cursor-pointer group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="p-3 rounded-xl bg-slate-100 text-[#0B2545] group-hover:bg-[#FF6B00] group-hover:text-white transition">
+                          <item.icon className="w-6 h-6" />
+                        </div>
+                        <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600 group-hover:bg-[#0B2545] group-hover:text-white transition">
+                          {item.badge}
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-bold text-[#0B2545] group-hover:text-[#FF6B00] transition mb-2">
+                        {item.title}
+                      </h3>
+                      <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                        {item.desc}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center text-sm font-bold text-[#FF6B00] group-hover:translate-x-1 transition">
+                      <span>Open Section</span>
+                      <ChevronRight className="w-4 h-4 ml-1" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+
+        {}
+        {activeTab === 'courses' && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div className="mb-8">
+              <h1 className="text-3xl font-extrabold text-[#0B2545]">Semester & Course Study Library</h1>
+              <p className="text-slate-600 text-sm mt-1">Select your course, syllabus pattern, and semester to view uploaded materials.</p>
+            </div>
+
+            {/* COURSE SECTION SELECTOR TABS */}
+            <div className="flex flex-wrap gap-2 mb-8 border-b border-slate-200 pb-4">
+              {[
+                { id: 'new_bpharm', label: 'New B.Pharm (2026-27)' },
+                { id: 'old_aktu', label: 'Old AKTU B.Pharm (2019-20)' },
+                { id: 'dpharm_part1', label: 'D.Pharm Part I' },
+                { id: 'dpharm_part2', label: 'D.Pharm Part II' },
+                { id: 'bpharm_imp', label: 'B.Pharm Imp Questions' },
+                { id: 'dpharm_imp', label: 'D.Pharm Imp Questions' }
+              ].map(sec => (
+                <button
+                  key={sec.id}
+                  onClick={() => setSelectedCourseSection(sec.id)}
+                  className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition ${
+                    selectedCourseSection === sec.id
+                      ? 'bg-[#0B2545] text-white shadow'
+                      : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                  }`}
+                >
+                  {sec.label}
+                </button>
+              ))}
+            </div>
+
+            {/* SEMESTER SELECTOR SUB-BAR (For B.Pharm Courses) */}
+            {['new_bpharm', 'old_aktu'].includes(selectedCourseSection) && (
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-8">
+                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Select Semester:</div>
+                <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+                  {['Semester 1', 'Semester 2', 'Semester 3', 'Semester 4', 'Semester 5', 'Semester 6', 'Semester 7', 'Semester 8'].map(sem => (
+                    <button
+                      key={sem}
+                      onClick={() => setSelectedSemester(sem)}
+                      className={`py-2 rounded-lg font-bold text-xs transition ${
+                        selectedSemester === sem
+                          ? 'bg-[#FF6B00] text-white shadow-sm'
+                          : 'bg-slate-50 text-slate-700 hover:bg-slate-200'
+                      }`}
+                    >
+                      {sem.replace('Semester ', 'Sem ')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* SEARCH AND FILTER TOOLS */}
+            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-8 flex flex-col sm:flex-row items-center gap-4">
+              <div className="relative flex-1 w-full">
+                <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search subject name, topic, or unit..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0B2545] outline-none"
+                />
+              </div>
+
+              <div className="flex items-center space-x-2 w-full sm:w-auto">
+                <Filter className="w-4 h-4 text-slate-400" />
+                <select
+                  value={filterMaterialType}
+                  onChange={e => setFilterMaterialType(e.target.value)}
+                  className="p-2.5 text-xs font-bold border border-slate-200 rounded-xl bg-white text-slate-700 outline-none w-full sm:w-auto"
+                >
+                  <option value="All">All Material Types</option>
+                  <option value="Notes">Notes</option>
+                  <option value="Important Questions">Important Questions</option>
+                  <option value="Practical">Practical</option>
+                  <option value="PYQ">Previous Year Paper</option>
+                </select>
+              </div>
+            </div>
+
+            {/* UPLOADED PDF DISPLAY GRID OR EMPTY STATE */}
+            {getFilteredNotesForStudent().length === 0 ? (
+              <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 shadow-sm max-w-lg mx-auto space-y-4 my-8">
+                <FolderOpen className="w-16 h-16 text-slate-300 mx-auto" />
+                <h3 className="text-xl font-bold text-[#0B2545]">Notes will be available soon</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Yash Maheshwari Sir is currently compiling and uploading verified handwritten notes for this section.
+                </p>
+                {isAdmin && (
+                  <button
+                    onClick={() => setActiveTab('admin')}
+                    className="mt-2 bg-[#FF6B00] text-white px-5 py-2 rounded-xl font-bold text-xs"
+                  >
+                    Upload Notes for this section as Admin
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {getFilteredNotesForStudent().map(item => {
+                  const hasAccess = userHasAccessToMaterial(item);
+
+                  return (
+                    <div key={item.id} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-[10px] font-black px-2.5 py-1 rounded bg-slate-100 text-[#0B2545] uppercase tracking-wider">
+                            {item.materialType}
+                          </span>
+                          {item.isFree ? (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 flex items-center space-x-1">
+                              <Unlock className="w-3 h-3" />
+                              <span>FREE</span>
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-700 flex items-center space-x-1">
+                              <Lock className="w-3 h-3" />
+                              <span>PREMIUM</span>
+                            </span>
+                          )}
+                        </div>
+
+                        <h3 className="font-bold text-base text-[#0B2545] leading-snug mb-1">{item.title}</h3>
+                        <p className="text-xs text-slate-500 line-clamp-2 mb-3">{item.description}</p>
+
+                        <div className="bg-slate-50 p-2.5 rounded-xl text-xs text-slate-600 space-y-1 mb-4 border border-slate-100">
+                          <div><strong>Subject:</strong> {item.subject}</div>
+                          <div><strong>Unit/Scope:</strong> {item.unit}</div>
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <span className="text-[10px] font-medium text-slate-400">{item.fileSize || 'PDF Document'}</span>
+
+                        {hasAccess ? (
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => setShowPdfViewerModal(item)}
+                              className="bg-[#0B2545] hover:bg-[#134074] text-white px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                              <span>View PDF</span>
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              const matchedPlan = plans.find(p => p.type === item.syllabusType) || plans[0];
+                              handleEnrollClick(matchedPlan);
+                            }}
+                            className="bg-[#FF6B00] hover:bg-[#e05e00] text-white px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1"
+                          >
+                            <Lock className="w-3.5 h-3.5" />
+                            <span>Unlock Access</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        )}
+
+        {}
+        {activeTab === 'pricing' && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+              <span className="bg-orange-100 text-[#FF6B00] text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+                Official Pricing Schedule
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-black text-[#0B2545]">
+                Course & Important Questions Access
+              </h1>
+              <p className="text-slate-600 text-sm">
+                Get full unit-wise PDF notes, syllabus guides, and exam prediction questions curated by Yash Maheshwari.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {plans.filter(p => p.active).map(plan => (
+                <div 
+                  key={plan.id}
+                  className={`bg-white rounded-3xl border-2 p-8 shadow-md flex flex-col justify-between relative ${
+                    plan.price > 200 ? 'border-[#FF6B00]' : 'border-slate-200'
+                  }`}
+                >
+                  {plan.price > 200 && (
+                    <div className="absolute -top-3.5 right-6 bg-[#FF6B00] text-white text-[10px] font-black uppercase px-3 py-1 rounded-full shadow">
+                      MOST POPULAR
+                    </div>
+                  )}
+
+                  <div>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{plan.category}</span>
+                    <h3 className="text-xl font-bold text-[#0B2545] mt-1">{plan.title}</h3>
+                    <p className="text-xs text-slate-500 mt-2 min-h-[36px]">{plan.description}</p>
+
+                    <div className="my-6">
+                      <div className="flex items-baseline space-x-1">
+                        <span className="text-4xl font-black text-[#0B2545]">₹{plan.price}</span>
+                      </div>
+                      <div className="mt-2 inline-flex items-center space-x-1 text-xs font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>Validity: {plan.validity}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleEnrollClick(plan)}
+                    className="mt-8 w-full bg-[#FF6B00] hover:bg-[#e05e00] text-white py-3.5 rounded-xl font-bold text-sm shadow transition"
+                  >
+                    Enroll Now
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {}
+        {activeTab === 'dashboard' && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            {!currentUser ? (
+              <div className="bg-white rounded-3xl p-12 text-center max-w-md mx-auto border border-slate-200 shadow-sm space-y-4">
+                <User className="w-12 h-12 text-[#0B2545] mx-auto opacity-40" />
+                <h2 className="text-2xl font-bold text-[#0B2545]">Student Portal Login</h2>
+                <p className="text-slate-600 text-sm">Log in with your mobile number to view purchased notes and payment verification status.</p>
+                <button
+                  onClick={() => { setAuthMode('login'); setShowAuthModal(true); }}
+                  className="bg-[#FF6B00] text-white px-6 py-3 rounded-xl font-bold text-sm w-full"
+                >
+                  Login Now
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-8">
+                {/* Profile Banner */}
+                <div className="bg-gradient-to-r from-[#0B2545] to-[#134074] rounded-3xl p-6 sm:p-8 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-2xl font-black border border-white/20">
+                      {currentUser.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold">{currentUser.name}</h1>
+                      <div className="text-xs text-slate-300 mt-1">Mobile: +91 {currentUser.phone} | Role: {currentUser.role}</div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleLogout}
+                    className="bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-xl text-xs font-bold transition"
+                  >
+                    Logout
+                  </button>
+                </div>
+
+                {/* Purchases & Verification Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+                    <h2 className="text-lg font-bold text-[#0B2545] mb-4 flex items-center space-x-2">
+                      <Clock className="w-5 h-5 text-[#FF6B00]" />
+                      <span>Payment Verification Status</span>
+                    </h2>
+
+                    {payments.filter(p => p.mobile === currentUser.phone).length === 0 ? (
+                      <p className="text-xs text-slate-500 py-6 text-center">No payment requests submitted yet.</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {payments.filter(p => p.mobile === currentUser.phone).map(tx => (
+                          <div key={tx.id} className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-center justify-between">
+                            <div>
+                              <div className="font-bold text-sm text-[#0B2545]">{tx.planTitle}</div>
+                              <div className="text-xs text-slate-500 mt-0.5">UTR: {tx.utr} | Amount: ₹{tx.amount}</div>
+                            </div>
+                            <div>
+                              {tx.status === 'Approved' && <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">APPROVED</span>}
+                              {tx.status === 'Pending' && <span className="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">PENDING</span>}
+                              {tx.status === 'Rejected' && <span className="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full">REJECTED</span>}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+                    <h2 className="text-lg font-bold text-[#0B2545] mb-4 flex items-center space-x-2">
+                      <Unlock className="w-5 h-5 text-emerald-600" />
+                      <span>Unlocked Premium Content</span>
+                    </h2>
+
+                    <div className="space-y-3">
+                      {notes.filter(n => userHasAccessToMaterial(n)).map(unlocked => (
+                        <div key={unlocked.id} className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+                          <div>
+                            <div className="font-bold text-xs text-[#0B2545]">{unlocked.title}</div>
+                            <div className="text-[10px] text-slate-500">{unlocked.course} • {unlocked.semester}</div>
+                          </div>
+                          <button
+                            onClick={() => setShowPdfViewerModal(unlocked)}
+                            className="bg-[#0B2545] text-white px-3 py-1.5 rounded-md text-xs font-bold"
+                          >
+                            Read PDF
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
+        {}
+        {activeTab === 'admin' && isAdmin && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+            
+            {/* Admin Header Banner */}
+            <div className="bg-[#0B2545] text-white p-6 sm:p-8 rounded-3xl flex items-center justify-between shadow-lg">
+              <div>
+                <span className="bg-orange-500 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md">
+                  Authorized Admin Panel
+                </span>
+                <h1 className="text-2xl sm:text-3xl font-extrabold mt-2">Welcome Yash Sir!</h1>
+                <p className="text-xs text-slate-300">Upload notes, modify pricing, and verify student BharatPe payments.</p>
+              </div>
+              <ShieldCheck className="w-12 h-12 text-[#FF6B00]" />
+            </div>
+
+            {/* ADMIN FORM: NOTES & STUDY MATERIAL UPLOADER */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b pb-4 border-slate-200">
+                <h2 className="text-xl font-extrabold text-[#0B2545] flex items-center space-x-2">
+                  <Upload className="w-5 h-5 text-[#FF6B00]" />
+                  <span>{editingNoteId ? 'Edit Study Material' : 'Upload New Study Material PDF'}</span>
+                </h2>
+                {editingNoteId && (
+                  <button
+                    onClick={() => {
+                      setEditingNoteId(null);
+                      setNoteForm({
+                        title: '', description: '', course: 'B.Pharm', syllabusType: 'New B.Pharm',
+                        semester: 'Semester 1', subject: '', unit: 'Unit 1', materialType: 'Notes',
+                        isPublished: true, isFree: false, pdfUrl: '', fileName: '', fileSize: ''
+                      });
+                    }}
+                    className="text-xs font-bold text-red-600 hover:underline"
+                  >
+                    Cancel Editing
+                  </button>
+                )}
+              </div>
+
+              <form onSubmit={handleSaveNote} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Note Title */}
+                  <div className="lg:col-span-2">
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Note Title *</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Human Anatomy & Physiology I - Unit 1 Notes"
+                      value={noteForm.title}
+                      onChange={e => setNoteForm({ ...noteForm, title: e.target.value })}
+                      required
+                      className="w-full p-2.5 text-sm border border-slate-300 rounded-xl"
+                    />
+                  </div>
+
+                  {/* Course Selection */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Course *</label>
+                    <select
+                      value={noteForm.course}
+                      onChange={e => {
+                        const c = e.target.value;
+                        setNoteForm({ 
+                          ...noteForm, 
+                          course: c, 
+                          syllabusType: c === 'B.Pharm' ? 'New B.Pharm' : 'D.Pharm',
+                          semester: c === 'B.Pharm' ? 'Semester 1' : 'Part I'
+                        });
+                      }}
+                      className="w-full p-2.5 text-sm border border-slate-300 rounded-xl bg-white"
+                    >
+                      <option value="B.Pharm">B.Pharm</option>
+                      <option value="D.Pharm">D.Pharm</option>
+                    </select>
+                  </div>
+
+                  {/* Syllabus Selection */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Syllabus Pattern *</label>
+                    <select
+                      value={noteForm.syllabusType}
+                      onChange={e => setNoteForm({ ...noteForm, syllabusType: e.target.value })}
+                      className="w-full p-2.5 text-sm border border-slate-300 rounded-xl bg-white"
+                    >
+                      {noteForm.course === 'B.Pharm' ? (
+                        <>
+                          <option value="New B.Pharm">New B.Pharm (2026-27)</option>
+                          <option value="Old AKTU">Old AKTU (2019-20)</option>
+                          <option value="B.Pharm Imp Qs">B.Pharm Important Questions</option>
+                        </>
+                      ) : (
+                        <>
+                          <option value="D.Pharm">D.Pharm Standard</option>
+                          <option value="D.Pharm Imp Qs">D.Pharm Important Questions</option>
+                        </>
+                      )}
+                    </select>
+                  </div>
+
+                  {/* Semester or D.Pharm Part Selection */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      {noteForm.course === 'B.Pharm' ? 'Semester Selection *' : 'D.Pharm Part *'}
+                    </label>
+                    <select
+                      value={noteForm.semester}
+                      onChange={e => setNoteForm({ ...noteForm, semester: e.target.value })}
+                      className="w-full p-2.5 text-sm border border-slate-300 rounded-xl bg-white"
+                    >
+                      {noteForm.course === 'B.Pharm' ? (
+                        ['Semester 1', 'Semester 2', 'Semester 3', 'Semester 4', 'Semester 5', 'Semester 6', 'Semester 7', 'Semester 8'].map(s => (
+                          <option key={s} value={s}>{s}</option>
+                        ))
+                      ) : (
+                        ['Part I', 'Part II'].map(p => (
+                          <option key={p} value={p}>{p}</option>
+                        ))
+                      )}
+                    </select>
+                  </div>
+
+                  {/* Subject Name */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Subject Name *</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Pharmaceutics I"
+                      value={noteForm.subject}
+                      onChange={e => setNoteForm({ ...noteForm, subject: e.target.value })}
+                      required
+                      className="w-full p-2.5 text-sm border border-slate-300 rounded-xl"
+                    />
+                  </div>
+
+                  {/* Unit Number */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Unit Number / Scope *</label>
+                    <select
+                      value={noteForm.unit}
+                      onChange={e => setNoteForm({ ...noteForm, unit: e.target.value })}
+                      className="w-full p-2.5 text-sm border border-slate-300 rounded-xl bg-white"
+                    >
+                      <option value="Unit 1">Unit 1</option>
+                      <option value="Unit 2">Unit 2</option>
+                      <option value="Unit 3">Unit 3</option>
+                      <option value="Unit 4">Unit 4</option>
+                      <option value="Unit 5">Unit 5</option>
+                      <option value="Full Subject">Full Subject</option>
+                    </select>
+                  </div>
+
+                  {/* Material Type */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Material Type *</label>
+                    <select
+                      value={noteForm.materialType}
+                      onChange={e => setNoteForm({ ...noteForm, materialType: e.target.value })}
+                      className="w-full p-2.5 text-sm border border-slate-300 rounded-xl bg-white"
+                    >
+                      <option value="Notes">Handwritten Notes</option>
+                      <option value="Important Questions">Important Questions</option>
+                      <option value="Practical">Practical Manual</option>
+                      <option value="PYQ">Previous Year Paper</option>
+                    </select>
+                  </div>
+
+                  {/* Access Level Toggle */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Access Level *</label>
+                    <select
+                      value={noteForm.isFree ? 'free' : 'paid'}
+                      onChange={e => setNoteForm({ ...noteForm, isFree: e.target.value === 'free' })}
+                      className="w-full p-2.5 text-sm border border-slate-300 rounded-xl bg-white font-bold"
+                    >
+                      <option value="paid">Premium (Paid Plan Access)</option>
+                      <option value="free">Free Preview (Public Access)</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Brief Description</label>
+                  <textarea
+                    rows={2}
+                    placeholder="Brief overview of topics covered in this PDF..."
+                    value={noteForm.description}
+                    onChange={e => setNoteForm({ ...noteForm, description: e.target.value })}
+                    className="w-full p-2.5 text-sm border border-slate-300 rounded-xl"
+                  />
+                </div>
+
+                {/* File Upload Box */}
+                <div className="p-4 bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl text-center space-y-2">
+                  <Upload className="w-8 h-8 text-slate-400 mx-auto" />
+                  <div className="text-xs font-bold text-slate-700">Select PDF File to Upload</div>
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handleFileUpload}
+                    className="text-xs text-slate-500 mx-auto"
+                  />
+                  {noteForm.fileName && (
+                    <div className="text-xs text-emerald-600 font-bold mt-1">
+                      Selected File: {noteForm.fileName} ({noteForm.fileSize})
+                    </div>
+                  )}
+                </div>
+
+                {/* Submit Controls */}
+                <div className="flex items-center justify-between pt-2">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="publishState"
+                      checked={noteForm.isPublished}
+                      onChange={e => setNoteForm({ ...noteForm, isPublished: e.target.checked })}
+                      className="w-4 h-4 text-[#FF6B00]"
+                    />
+                    <label htmlFor="publishState" className="text-xs font-bold text-slate-700">Publish Immediately on Student Portal</label>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="bg-[#FF6B00] hover:bg-[#e05e00] text-white px-8 py-3 rounded-xl font-bold text-sm shadow-md"
+                  >
+                    {editingNoteId ? 'Update Material' : 'Publish Study PDF'}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* LIVE NOTES DIRECTORY & MANAGEMENT TABLE */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+              <h2 className="text-xl font-extrabold text-[#0B2545]">Manage Published Materials ({notes.length})</h2>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase">
+                      <th className="p-3">Title & Subject</th>
+                      <th className="p-3">Course / Sem</th>
+                      <th className="p-3">Syllabus</th>
+                      <th className="p-3">Type</th>
+                      <th className="p-3">Access</th>
+                      <th className="p-3">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {notes.map(n => (
+                      <tr key={n.id} className="border-b border-slate-100 hover:bg-slate-50">
+                        <td className="p-3 font-bold text-[#0B2545]">
+                          <div>{n.title}</div>
+                          <div className="text-[10px] text-slate-400 font-normal">{n.subject} ({n.unit})</div>
+                        </td>
+                        <td className="p-3 font-medium">{n.course} - {n.semester}</td>
+                        <td className="p-3">{n.syllabusType}</td>
+                        <td className="p-3 font-semibold">{n.materialType}</td>
+                        <td className="p-3">
+                          {n.isFree ? (
+                            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">FREE</span>
+                          ) : (
+                            <span className="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">PAID</span>
+                          )}
+                        </td>
+                        <td className="p-3 flex items-center space-x-2">
+                          <button
+                            onClick={() => handleEditNote(n)}
+                            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
+                            title="Edit"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteNote(n.id)}
+                            className="p-1.5 text-red-600 hover:bg-red-50 rounded"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* PENDING PAYMENTS VERIFICATION QUEUE */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+              <h2 className="text-xl font-extrabold text-[#0B2545]">Pending Student Payments Verification</h2>
+
+              {payments.filter(p => p.status === 'Pending').length === 0 ? (
+                <p className="text-xs text-slate-500">No pending student transactions awaiting verification.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b text-slate-400 uppercase font-bold">
+                        <th className="p-3">Student</th>
+                        <th className="p-3">Mobile</th>
+                        <th className="p-3">Plan</th>
+                        <th className="p-3">Amount</th>
+                        <th className="p-3">UTR / Txn ID</th>
+                        <th className="p-3">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {payments.filter(p => p.status === 'Pending').map(p => (
+                        <tr key={p.id} className="border-b border-slate-100">
+                          <td className="p-3 font-bold">{p.studentName}</td>
+                          <td className="p-3">{p.mobile}</td>
+                          <td className="p-3 font-medium">{p.planTitle}</td>
+                          <td className="p-3 font-bold text-emerald-600">₹{p.amount}</td>
+                          <td className="p-3 font-mono text-[11px]">{p.utr}</td>
+                          <td className="p-3 flex space-x-2">
+                            <button
+                              onClick={() => setPayments(payments.map(x => x.id === p.id ? { ...x, status: 'Approved' } : x))}
+                              className="bg-emerald-600 text-white px-3 py-1 rounded font-bold"
+                            >
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => setPayments(payments.map(x => x.id === p.id ? { ...x, status: 'Rejected' } : x))}
+                              className="bg-red-600 text-white px-3 py-1 rounded font-bold"
+                            >
+                              Reject
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+      </main>
+
+      {}
+      
+      {/* PDF VIEWER MODAL */}
+      {showPdfViewerModal && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-4xl w-full h-[85vh] flex flex-col shadow-2xl overflow-hidden relative">
+            <div className="bg-[#0B2545] text-white p-4 flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-sm">{showPdfViewerModal.title}</h3>
+                <div className="text-[10px] text-slate-300">{showPdfViewerModal.subject} • {showPdfViewerModal.semester}</div>
+              </div>
+              <div className="flex items-center space-x-2">
+                {showPdfViewerModal.pdfUrl && (
+                  <a
+                    href={showPdfViewerModal.pdfUrl}
+                    download={showPdfViewerModal.fileName || 'note.pdf'}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-[#FF6B00] text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download PDF</span>
+                  </a>
+                )}
+                <button
+                  onClick={() => setShowPdfViewerModal(null)}
+                  className="p-1.5 text-slate-300 hover:text-white"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 bg-slate-100 p-4 overflow-y-auto flex items-center justify-center">
+              {showPdfViewerModal.pdfUrl ? (
+                <iframe
+                  src={showPdfViewerModal.pdfUrl}
+                  className="w-full h-full border-none rounded-xl"
+                  title="PDF Preview"
+                />
+              ) : (
+                <div className="text-center p-8 space-y-3">
+                  <AlertCircle className="w-12 h-12 text-amber-500 mx-auto" />
+                  <div className="font-bold text-slate-800">Preview Link Not Generated</div>
+                  <p className="text-xs text-slate-500 max-w-sm">
+                    This file was created in browser local preview. To view actual files online, link a cloud bucket.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BHARATPE PAYMENT MODAL */}
+      {showPaymentModal && selectedPlanForPurchase && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative space-y-6">
+            <button onClick={() => setShowPaymentModal(false)} className="absolute top-5 right-5 text-slate-400">
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="text-center space-y-1">
+              <span className="bg-orange-100 text-[#FF6B00] text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
+                Official Payment QR
+              </span>
+              <h2 className="text-2xl font-extrabold text-[#0B2545]">Scan & Pay via BharatPe</h2>
+              <p className="text-xs text-slate-500">Selected Plan: <strong>{selectedPlanForPurchase.title}</strong></p>
+            </div>
+
+            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-3">
+              <img src={assets.qrCode} alt="BharatPe QR" className="w-48 h-48 mx-auto object-contain rounded-lg border bg-white" />
+              <div className="text-xs font-mono bg-white p-2 rounded-lg border text-slate-700">
+                UPI ID: <strong>{assets.upiId}</strong>
+              </div>
+              <div className="text-2xl font-black text-[#0B2545]">
+                Payable Amount: <span className="text-[#FF6B00]">₹{selectedPlanForPurchase.price}</span>
+              </div>
+            </div>
+
+            <form onSubmit={handlePaymentSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Enter 12-Digit UTR / Txn ID *</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 320918239012"
+                  value={paymentForm.utr}
+                  onChange={e => setPaymentForm({ ...paymentForm, utr: e.target.value })}
+                  required
+                  className="w-full p-3 text-sm border rounded-xl font-mono"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-[#0B2545] hover:bg-[#134074] text-white py-3.5 rounded-xl font-bold text-sm shadow"
+              >
+                Submit Payment for Verification
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* LOGIN & ADMIN AUTH MODAL */}
+      {showAuthModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative space-y-6">
+            <button onClick={() => setShowAuthModal(false)} className="absolute top-5 right-5 text-slate-400">
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="flex border-b border-slate-200">
+              <button
+                onClick={() => setAuthMode('login')}
+                className={`flex-1 py-3 text-xs font-bold text-center border-b-2 ${
+                  authMode !== 'admin' ? 'border-[#FF6B00] text-[#FF6B00]' : 'border-transparent text-slate-400'
+                }`}
+              >
+                Student Access
+              </button>
+              <button
+                onClick={() => setAuthMode('admin')}
+                className={`flex-1 py-3 text-xs font-bold text-center border-b-2 ${
+                  authMode === 'admin' ? 'border-[#0B2545] text-[#0B2545]' : 'border-transparent text-slate-400'
+                }`}
+              >
+                Admin Panel Login
+              </button>
+            </div>
+
+            {authMode !== 'admin' ? (
+              <form onSubmit={handleAuthSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter your name"
+                    value={authForm.name}
+                    onChange={e => setAuthForm({ ...authForm, name: e.target.value })}
+                    required
+                    className="w-full p-3 text-sm border rounded-xl"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Mobile Number</label>
+                  <div className="flex space-x-2">
+                    <input
+                      type="tel"
+                      placeholder="10-digit mobile number"
+                      value={authForm.phone}
+                      onChange={e => setAuthForm({ ...authForm, phone: e.target.value })}
+                      required
+                      className="flex-1 p-3 text-sm border rounded-xl"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSendOtp}
+                      className="bg-slate-100 text-slate-700 text-xs font-bold px-3 rounded-xl border"
+                    >
+                      Send OTP
+                    </button>
+                  </div>
+                </div>
+
+                {otpSent && (
+                  <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-800 space-y-2">
+                    <div>OTP Code Sent! Simulated Code: <strong>{simulatedOtp}</strong></div>
+                    <input
+                      type="text"
+                      placeholder="Enter 4-digit OTP"
+                      value={authForm.otp}
+                      onChange={e => setAuthForm({ ...authForm, otp: e.target.value })}
+                      required
+                      className="w-full p-2 border border-emerald-300 rounded-lg text-sm text-center font-bold"
+                    />
+                  </div>
+                )}
+
+                <button type="submit" className="w-full bg-[#FF6B00] text-white py-3.5 rounded-xl font-bold text-sm">
+                  Verify & Access Student Dashboard
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleAuthSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Admin Passcode *</label>
+                  <input
+                    type="password"
+                    placeholder="Enter Admin Passcode"
+                    value={authForm.adminCode}
+                    onChange={e => setAuthForm({ ...authForm, adminCode: e.target.value })}
+                    required
+                    className="w-full p-3 text-sm border rounded-xl font-bold"
+                  />
+                  <span className="text-[10px] text-slate-400 mt-1 block">Passcode: YASH2026</span>
+                </div>
+
+                <button type="submit" className="w-full bg-[#0B2545] text-white py-3.5 rounded-xl font-bold text-sm">
+                  Log in as Admin
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* STORAGE & BACKEND SETUP NOTICE MODAL */}
+      {showStorageNoticeModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative space-y-4">
+            <button onClick={() => setShowStorageNoticeModal(false)} className="absolute top-5 right-5 text-slate-400">
+              <X className="w-6 h-6" />
+            </button>
+
+            <h2 className="text-xl font-bold text-[#0B2545] flex items-center space-x-2">
+              <Database className="w-5 h-5 text-[#FF6B00]" />
+              <span>Storage & Persistence Status Notice</span>
+            </h2>
+
+            <div className="space-y-3 text-xs text-slate-600 leading-relaxed">
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900">
+                <strong>Current State (Browser Canvas Preview):</strong> All uploads, price changes, and payment verification history are stored locally in your browser session via LocalStorage.
+              </div>
+
+              <p>To enable online cloud storage and persistence across external user devices:</p>
+              
+              <ol className="list-decimal pl-4 space-y-1 font-medium">
+                <li>Create a free <strong>Supabase</strong> project.</li>
+                <li>Create a public bucket named <code className="bg-slate-100 px-1 py-0.5 rounded text-red-600">bpharma-notes-bucket</code>.</li>
+                <li>Connect your Supabase API keys to store uploaded PDF blobs directly in Supabase Storage.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* FOOTER SECTION */}
+      <footer className="bg-[#0B2545] text-white py-12 border-t border-slate-800 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <div className="flex items-center space-x-2 mb-3">
+              <img src={assets.logo} alt="Logo" className="w-8 h-8 rounded-full" />
+              <span className="font-extrabold text-lg">B Pharma Pathshala</span>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Founded by Yash Maheshwari. Excellence in Pharmacy Education with high-yield notes, syllabus guides, and exam prediction material.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-sm mb-3 text-orange-400">Quick Links</h4>
+            <div className="space-y-2 text-xs text-slate-300">
+              <div><button onClick={() => setActiveTab('home')}>Home</button></div>
+              <div><button onClick={() => setActiveTab('courses')}>Semester Library</button></div>
+              <div><button onClick={() => setActiveTab('pricing')}>Pricing Plans</button></div>
+              <div>
+                <button 
+                  onClick={() => {
+                    if (!isAdmin) {
+                      setAuthMode('admin');
+                      setShowAuthModal(true);
+                    } else {
+                      setActiveTab('admin');
+                    }
+                  }} 
+                  className="text-orange-300 font-bold"
+                >
+                  Admin Panel (Yash Sir)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-sm mb-3 text-orange-400">Support & Contact</h4>
+            <div className="text-xs text-slate-300 space-y-2">
+              <div>WhatsApp Support: +91 8006020616</div>
+              <div>Direct Chat: <a href={assets.whatsappUrl} target="_blank" rel="noreferrer" className="text-orange-400 hover:underline font-bold">Click to Chat on WhatsApp</a></div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
